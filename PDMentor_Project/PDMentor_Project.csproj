@@ -541,11 +541,12 @@
     <Content Include="node_modules\yeast\LICENSE" />
     <Content Include="node_modules\yeast\package.json" />
     <Content Include="node_modules\yeast\README.md" />
+    <None Include="Properties\PublishProfiles\pdmentor - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\pdmentor - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Images\PD-Logo.png" />
     <Content Include="Index-old.html" />
     <Content Include="index.html" />
-    <Content Include="notbootstrap.html" />
     <Content Include="PDMentorWebService.asmx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
