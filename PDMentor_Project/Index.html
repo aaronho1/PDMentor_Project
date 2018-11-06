@@ -41,7 +41,7 @@
 
         // Beginning of Show Card Feature
 
-        var cardNames = ['login', 'home', 'addmentor', 'howtotalk', 'selectskill', 'vidrecord', 'chatBox', 'email'];
+        var cardNames = ['settings', 'login', 'home', 'addmentor', 'howtotalk', 'selectskill', 'vidrecord', 'chatBox', 'email'];
 
         function showCard(cardName) {
             for (var i = 0; i < cardNames.length; i++) {
@@ -95,7 +95,7 @@
                 dataType: "json",
                 success: function (msg) {
                     if (msg.d) {
-                        showCard('loginBox');
+                        showCard('login');
                         clearChat();
                     }
                     else {
@@ -360,7 +360,7 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
@@ -453,7 +453,7 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
@@ -488,7 +488,7 @@
             </div>
             <div class="row text-center appss">
                 <div class="col-xs-12">
-                    <a href="#" onclick="showCard('email')"><i class="fas fa-envelope fa-4x"></i></a>
+                    <a href="mailto:mentor@example.com?subject=Email From Mentor | PM Mentor &body=Dear Mentor,%0D%0A%0D%0A[Insert Message Here]%0D%0A%0D%0ASincerity,%0D%0A%0D%0A[Insert Name Here]"><i class="fas fa-envelope fa-4x"></i></a>
                     <div>Email</div>
                 </div>
             </div>
@@ -502,7 +502,7 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
@@ -595,7 +595,7 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
@@ -631,7 +631,7 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
@@ -672,7 +672,43 @@
                     <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-cog fa-4x"></i></a>
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings" class="apppage" style="display:none;">
+        <div class="temp-header container-fluid">
+            <div class="row apphr">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 text-center appht">
+                    <div>PD</div>
+                    <div>Mentor</div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <i class="fas fa-search fa-4x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="temp-body container-fluid">
+            <div class="row text-center appss">
+                <div class="col-xs-12">
+                    <a href="#" onclick="LogOff()"><i class="fas fa-file-alt fa-4x"></i></a>
+                    <div>LOG OFF</div>
+                </div>
+            </div>
+        </div>
+        <div class="temp-footer container-fluid">
+            <div class="row text-center appfi">
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
                 </div>
             </div>
         </div>
