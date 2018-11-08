@@ -36,6 +36,7 @@
         .vis { visibility: hidden; }
         video { width: 85%; height: 100%; }
         textarea { width: 100%; }
+        .setts { margin: 50% 0% 50% 0%; }
 	</style>
 
     <script>
@@ -126,6 +127,8 @@
                 dataType: "json",
                 success: function (msg) {
                     if (msg.d) {
+                        $("#uid").val('');
+                        $("#pass").val('');
                         showCard('login');
                         clearChat();
                     }
@@ -775,8 +778,8 @@
         </div>
         <div class="temp-body container-fluid">
             <div class="row text-center appss">
-                <div class="col-xs-12">
-                    <a href="#" onclick="LogOff()"><i class="fas fa-file-alt fa-4x"></i></a>
+                <div class="col-xs-12 setts">
+                    <a href="#" onclick="LogOff()"><i class="fas fa-cog fa-4x"></i></a>
                     <div>LOG OFF</div>
                 </div>
             </div>
