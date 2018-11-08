@@ -288,5 +288,44 @@ namespace PDMentor_Project
             //convert the list of messages to an array and return!
             return messages.ToArray();
         }
+
+        [WebMethod(EnableSession = true)]
+        public bool SubmitFeedback(string experience, string feedback)
+        {
+            bool success = false;
+            //here we're checking the id session variable to make sure it's not empty
+            //if it is, we won't let them send a message!
+            if (Session["id"] != null)
+            {
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["rcsdatabaseConnectionString"].ConnectionString;
+                string sqlSelect = "insert into feedback (id, experience, feedback) " +
+                    "values(@idValue, @experienceValue, @feedbackValue);";
+
+                SqlConnection sqlConnection = new SqlConnection(sqlConnectString);
+                SqlCommand sqlCommand = new SqlCommand(sqlSelect, sqlConnection);
+
+                sqlCommand.Parameters.Add("@idValue", System.Data.SqlDbType.Int);
+                //we're using the id session variable for the parameter here.  When
+                //we pull stuff out of the session variable it's just a generic object
+                //so we have to explicitly type cast it to, in this case, an int
+                sqlCommand.Parameters["@idValue"].Value = Convert.ToInt32(Session["id"]);
+                sqlCommand.Parameters.Add("@experienceValue", System.Data.SqlDbType.NVarChar);
+                sqlCommand.Parameters["@experienceValue"].Value = HttpUtility.UrlDecode(experience);
+                sqlCommand.Parameters.Add("@feedbackValue", System.Data.SqlDbType.NVarChar);
+                sqlCommand.Parameters["@feedbackValue"].Value = HttpUtility.UrlDecode(feedback);
+
+                sqlConnection.Open();
+                //here's another kind of execution, that just tells us the number of rows affected
+                //if it's greater than 0, we can assume the row was inserted (the message was sent)
+                int affectedRows = sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                if (affectedRows > 0)
+                {
+                    //message was sent, so set flag to true!
+                    success = true;
+                }
+            }
+            return success;
+        }
     }
 }

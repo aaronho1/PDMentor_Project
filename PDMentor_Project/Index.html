@@ -41,7 +41,7 @@
 
         // Beginning of Show Card Feature
 
-        var cardNames = ['settings', 'login', 'home', 'addmentor', 'howtotalk', 'selectskill', 'vidrecord', 'chatBox', 'email'];
+        var cardNames = ['settings', 'login', 'home', 'addmentor', 'howtotalk', 'selectskill', 'vidrecord', 'chatBox', 'email','feedback'];
 
         function showCard(cardName) {
             for (var i = 0; i < cardNames.length; i++) {
@@ -58,7 +58,10 @@
 
         // Beginning of Logon/Logoff Feature
 
-        function LogOn(userId, pass) {
+        function LogOn(userId, pass)
+
+        {   
+            
             var webMethod = "PDMentorWebService.asmx/LogOn";
             var parameters = "{\"uid\":\"" + encodeURI(userId) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
 
@@ -84,6 +87,33 @@
                 }
             });
         }
+
+        function SubmitFeedback(radioValue, textAreaValue)
+        {            
+            var webMethod = "PDMentorWebService.asmx/SubmitFeedback";
+            var parameters = "{\"experience\":\"" + encodeURI(radioValue) + "\",\"feedback\":\"" + encodeURI(textAreaValue) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d) {
+                        clearFeedback()
+                        showCard('howtotalk');                        
+                    }
+                    else {
+                        alert("submit failed");
+                    }
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }
+
 
         function LogOff() {
 
@@ -118,11 +148,18 @@
             $("#chatPanel").html("");
         }
 
+        function clearFeedback()
+        {            
+            $('input[type="radio"]').prop('checked', false);
+            $("textarea").val('');
+        }
+
         function scrollChat() {
             $("#chatPanel").scrollTop($("#chatPanel").prop("scrollHeight"));
         }
 
-        function SendMessage(message) {
+        function SendMessage(message)
+        {            
             var webMethod = "PDMentorWebService.asmx/SendMessage";
             var parameters = "{\"message\":\"" + encodeURI(message) + "\"}";
 
@@ -332,6 +369,26 @@
             <input type="text" placeholder="Username" id="uid" autocorrect="off" autocapitalize="none"><br>
             <input type="password" id="pass" placeholder="Password"><br>
             <button class="submit" onclick="LogOn($('#uid').val(), $('#pass').val())">Begin Development</button>
+        </div>
+    </div>
+
+    <div id="feedback" class="apppage" style="display:none">        
+        <div class="padz"></div>
+        <div class="temp-body container-fluid text-center">
+            <form>
+                How was the video experience for you?
+                <div>
+                    <input type="radio" name="feedback" value="Good" /> Good
+                    <input type="radio" name="feedback" value="Neutral" /> Neutral
+                    <input type="radio" name="feedback" value="Bad" /> Bad
+                </div>
+                
+                <textarea rows="10" cols="60" placeholder="Submit any feedback here"></textarea>
+            </form>
+        </div>
+        <div class="log-inputs">
+            <button class="submit" onclick="SubmitFeedback($('input:checked').val(), $('textarea').val())">Submit</button>
+            <button class="reset" onclick="clearFeedback()">Skip</button>
         </div>
     </div>
 
@@ -660,7 +717,7 @@
             <div>
                 <button id="startButton">Start</button>
                 <button id="callButton">Call</button>
-                <button id="hangupButton">Hang Up</button>
+                <button id="hangupButton" onclick="showCard('feedback')">Hang Up</button>
             </div>
         </div>
         <div class="temp-footer container-fluid">
