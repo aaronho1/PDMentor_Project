@@ -35,6 +35,7 @@
         .inputLabel { text-align: right; }
         .vis { visibility: hidden; }
         video { width: 85%; height: 100%; }
+        textarea { width: 100%; }
 	</style>
 
     <script>
@@ -152,6 +153,7 @@
         {            
             $('input[type="radio"]').prop('checked', false);
             $("textarea").val('');
+            showCard('howtotalk');
         }
 
         function scrollChat() {
@@ -372,23 +374,46 @@
         </div>
     </div>
 
-    <div id="feedback" class="apppage" style="display:none">        
-        <div class="padz"></div>
-        <div class="temp-body container-fluid text-center">
+    <div id="feedback" class="apppage" style="display:none;">
+        <div class="temp-header container-fluid">
+            <div class="row apphr">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 text-center appht">
+                    <div>GIVE</div>
+                    <div>Feedback</div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <i class="fas fa-search fa-4x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="temp-body container-fluid">
+            <div class="text-center appbt">How was the video experience for you?</div>
             <form>
-                How was the video experience for you?
-                <div>
+                <div class="text-center">
                     <input type="radio" name="feedback" value="Good" /> Good
                     <input type="radio" name="feedback" value="Neutral" /> Neutral
                     <input type="radio" name="feedback" value="Bad" /> Bad
                 </div>
-                
                 <textarea rows="10" cols="60" placeholder="Submit any feedback here"></textarea>
             </form>
+            <div class="log-inputs">
+                <button class="submit" onclick="SubmitFeedback($('input:checked').val(), $('textarea').val())">Submit</button>
+                <button class="reset submit" onclick="clearFeedback()">Skip</button>
+            </div>
         </div>
-        <div class="log-inputs">
-            <button class="submit" onclick="SubmitFeedback($('input:checked').val(), $('textarea').val())">Submit</button>
-            <button class="reset" onclick="clearFeedback()">Skip</button>
+        <div class="temp-footer container-fluid">
+            <div class="row text-center appfi">
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -714,7 +739,7 @@
             <div>
                 <video id="remoteVideo" autoplay playsinline></video>
             </div>
-            <div>
+            <div class="text-center">
                 <button id="startButton">Start</button>
                 <button id="callButton">Call</button>
                 <button id="hangupButton" onclick="showCard('feedback')">Hang Up</button>
