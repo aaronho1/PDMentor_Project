@@ -46,6 +46,7 @@
         @media screen and (max-width: 540px) {
             .log-img { padding-top: 25%; width: 35%; height: auto; }
             .midicon { margin: 50% 0% 50% 0%; }
+            video { width: 80%; }
         }
 	</style>
 
@@ -373,7 +374,6 @@
         </div>
     </div>
 
-
     <div id="home" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
             <div class="row apphr">
@@ -518,7 +518,6 @@
             </div>
         </div>
     </div>
-
 
     <div id="selectdepart" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
@@ -672,7 +671,6 @@
         </div>
     </div>
 
-
     <div id="howtotalk" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
             <div class="row apphr">
@@ -772,12 +770,10 @@
             </div>
         </div>
         <div class="temp-body container-fluid text-center">
-            <div>
-                <video id="localVideo" autoplay playsinline muted></video>
-            </div>
-            <div>
-                <video id="remoteVideo" autoplay playsinline></video>
-            </div>
+
+            <video id="localVideo" autoplay playsinline></video>
+            <video id="remoteVideo" autoplay playsinline></video>
+
             <div class="container-fluid text-right">
                 <div class="row">
                     <div class="col-xs-4">
@@ -849,8 +845,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./js/main.js"></script>
