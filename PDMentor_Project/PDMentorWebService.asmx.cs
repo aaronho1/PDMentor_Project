@@ -103,62 +103,6 @@ namespace PDMentor_Project
 
 
         /////////////////////////////////////////////////////////
-        //EXAMPLE OF: insert query, collecting the primary key of the inserted row
-        //				putting a value into a session variable
-        /////////////////////////////////////////////////////////
-        [WebMethod(EnableSession = true)]
-        public bool CreateAccount(string uid, string pass, string firstName, string lastName)
-        {
-            //again, this is either gonna work or it won't.  We return this flag to let them
-            //know if account creation was successful
-            bool success = false;
-            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["rcsdatabaseConnectionString"].ConnectionString;
-            //the only thing fancy about this query is SELECT SCOPE_IDENTITY() at the end.  All that
-            //does is tell sql server to return the primary key of the last inserted row.
-            //we want this, because if the account gets created we will automatically
-            //log them on by storing their id in the session.  That's just a design choice.  You could
-            //decide that after they create an account they still have to log on seperately.  Whatevs.
-            string sqlSelect = "insert into useraccount (username, password, firstname, lastname) " +
-                "values(@idValue, @passValue, @fnameValue, @lnameValue)SELECT SCOPE_IDENTITY();";
-
-            SqlConnection sqlConnection = new SqlConnection(sqlConnectString);
-            SqlCommand sqlCommand = new SqlCommand(sqlSelect, sqlConnection);
-
-            sqlCommand.Parameters.Add("@idValue", System.Data.SqlDbType.NVarChar);
-            sqlCommand.Parameters["@idValue"].Value = HttpUtility.UrlDecode(uid);
-            sqlCommand.Parameters.Add("@passValue", System.Data.SqlDbType.NVarChar);
-            sqlCommand.Parameters["@passValue"].Value = HttpUtility.UrlDecode(pass);
-            sqlCommand.Parameters.Add("@fnameValue", System.Data.SqlDbType.NVarChar);
-            sqlCommand.Parameters["@fnameValue"].Value = HttpUtility.UrlDecode(firstName);
-            sqlCommand.Parameters.Add("@lnameValue", System.Data.SqlDbType.NVarChar);
-            sqlCommand.Parameters["@lnameValue"].Value = HttpUtility.UrlDecode(lastName);
-
-            //this time, we're not using a data adapter to fill a data table.  We're just
-            //opening the connection, telling our command to "executescalar" which says basically
-            //execute the query and just hand me back the number the query returns (the ID, remember?).
-            //don't forget to close the connection!
-            sqlConnection.Open();
-            //we're using a try/catch so that if the query errors out we can handle it gracefully
-            //by closing the connection and moving on
-            try
-            {
-                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
-                //these three lines only execute if the command doesn't error out
-                //so they won't get logged in unless the row is actually inserted.
-                success = true;
-                Session["id"] = accountID;
-                //this is monkey business that you'll understand when you read the comments in
-                //get messages web method
-                Session["lastmessageid"] = -1;
-            }
-            catch (Exception e) { }
-            sqlConnection.Close();
-
-            return success;
-        }
-
-
-        /////////////////////////////////////////////////////////
         //EXAMPLE OF: using a session variable to confirm the user is logged in
         //				executing a query that doesn't return anything
         /////////////////////////////////////////////////////////

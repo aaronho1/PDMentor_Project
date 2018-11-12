@@ -46,7 +46,7 @@ const offerOptions = {
 let startTime = null;
 
 // Define peer connections, streams and video elements.
-// const localVideo = document.getElementById('localVideo');
+const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 
 // let localStream;
@@ -85,8 +85,8 @@ function gotRemoteMediaStream(event) {
 // Logs a message with the id and size of a video element.
 function logVideoLoaded(event) {
   const video = event.target;
-  trace(`${video.id} videoWidth: ${video.videoWidth}%, ` +
-        `videoHeight: ${video.videoHeight}%.`);
+  trace(`${video.id} videoWidth: ${video.videoWidth}px, ` +
+        `videoHeight: ${video.videoHeight}px.`);
 }
 
 // Logs a message with the id and size of a video element.

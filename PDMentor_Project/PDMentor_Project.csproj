@@ -79,17 +79,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Global.asax" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="js\lib\adapter.js" />
-    <Content Include="js\main.js" />
+    <Content Include="index.js" />
     <Content Include="node_modules\accepts\index.js" />
     <Content Include="node_modules\after\index.js" />
     <Content Include="node_modules\after\test\after-test.js" />
@@ -541,15 +535,20 @@
     <Content Include="node_modules\yeast\LICENSE" />
     <Content Include="node_modules\yeast\package.json" />
     <Content Include="node_modules\yeast\README.md" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
     <None Include="Properties\PublishProfiles\pdmentor - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\pdmentor - Web Deploy.pubxml" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Images\PD-Logo.png" />
-    <Content Include="Index-old.html" />
     <Content Include="index.html" />
+    <Content Include="js\lib\adapter.js" />
+    <Content Include="js\main.js" />
     <Content Include="PDMentorWebService.asmx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -579,9 +578,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
     <Compile Include="Message.cs" />
     <Compile Include="PDMentorWebService.asmx.cs">
       <DependentUpon>PDMentorWebService.asmx</DependentUpon>
@@ -596,8 +592,8 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -606,11 +602,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="node_modules\colors\index.d.ts" />
-    <TypeScriptCompile Include="node_modules\colors\safe.d.ts" />
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <TypeScriptCompile Include="node_modules\colors\index.d.ts" />
+    <TypeScriptCompile Include="node_modules\colors\safe.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

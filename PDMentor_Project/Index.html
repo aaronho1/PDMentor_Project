@@ -11,15 +11,19 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     
     <style>
+        .anch { color: black; }
+        .apphome { background-color: #0088ff; padding: 2em 0em 2em 0em; font-size: 1.5em; font-weight: bold; }
+        .chts { padding-top: 5%; }
+        .log-img { padding-top: 5%; width: 10%; height: auto; }
     	.disnone { display: none; }
     	.apppage { height:100vh; }
     	.log-logo { height:40vh; margin: auto; text-align: center; }
-		.log-img { padding-top:25%;width:35%;height:auto; }
 		.padz { height:5vh; }
 		.log-inputs { height:55vh; margin: auto; text-align: center; }
 		input[type=text], [type=password] { width: 80%; padding: 10px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
 		.submit { font-weight: bold; font-style: italic; font-size: 1.5em; width: 80%; background-color: #000000; color: white; padding: 5px 0px; margin: 8px 0; border: none; cursor: pointer; }
-		.temp-header { height:10vh; background-color: #42a881; border-bottom: 5px solid white }
+		.vidsubmit { font-weight: bold; font-style: italic; font-size: 1.5em; width: 100%; background-color: #000000; color: white; padding: 5px 0px; margin: 8px 0; border: none; cursor: pointer; }
+        .temp-header { height:10vh; background-color: #42a881; border-bottom: 5px solid white }
 		.temp-body { height:75vh; }
 		.temp-footer { height:15vh; border-top: 5px solid black;}
 		.apphr { padding: .2em 0em .1em 0em; }
@@ -34,16 +38,29 @@
         .chatInputUnfocused { height: 25px; }
         .inputLabel { text-align: right; }
         .vis { visibility: hidden; }
-        video { width: 85%; height: 100%; }
         textarea { width: 100%; }
-        .setts { margin: 50% 0% 50% 0%; }
+        .midicon { margin-top: 15%; }
+        #main { display: block; }
+        #mentor { display: none; }
+        #mentee { display: none; }
+        @media screen and (max-width: 540px) {
+            .log-img { padding-top: 25%; width: 35%; height: auto; }
+            .midicon { margin: 50% 0% 50% 0%; }
+        }
 	</style>
 
     <script>
 
         // Beginning of Show Card Feature
 
-        var cardNames = ['settings', 'login', 'home', 'addmentor', 'howtotalk', 'selectskill', 'vidrecord', 'chatBox', 'email','feedback'];
+        var cardNames = ['pickrole', 'settings', 'login', 'home', 'addmentor', 'howtotalk', 'selectdepart', 'vidrecord', 'chatBox', 'email','feedback'];
+        var checkMessagesFlag = false;
+        var checkMessagesTimer;
+        var txtFocus = false;
+        var innerHeight = 0;
+        var x = 0;
+        var y = 0;
+        var z = 0;
 
         function showCard(cardName) {
             for (var i = 0; i < cardNames.length; i++) {
@@ -76,7 +93,11 @@
                 success: function (msg) {
                     if (msg.d) {
                         clearChat();
-                        showCard('howtotalk');
+                        $('#welname').html('Welcome ' + encodeURI(userId).toUpperCase() + ' To');
+                        $('#main').css('display', 'block');
+                        $('#mentor').css('display', 'none');
+                        $('#mentee').css('display', 'none');
+                        showCard('home');
                         checkMessagesFlag = true;
                         CheckMessages();
                     }
@@ -90,33 +111,6 @@
             });
         }
 
-        function SubmitFeedback(radioValue, textAreaValue)
-        {            
-            var webMethod = "PDMentorWebService.asmx/SubmitFeedback";
-            var parameters = "{\"experience\":\"" + encodeURI(radioValue) + "\",\"feedback\":\"" + encodeURI(textAreaValue) + "\"}";
-
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                data: parameters,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    if (msg.d) {
-                        clearFeedback()
-                        showCard('howtotalk');                        
-                    }
-                    else {
-                        alert("submit failed");
-                    }
-                },
-                error: function (e) {
-                    alert("boo...");
-                }
-            });
-        }
-
-
         function LogOff() {
 
             var webMethod = "PDMentorWebService.asmx/LogOff";
@@ -127,6 +121,9 @@
                 dataType: "json",
                 success: function (msg) {
                     if (msg.d) {
+                        x = 0;
+                        y = 0;
+                        z = 0;
                         $("#uid").val('');
                         $("#pass").val('');
                         showCard('login');
@@ -144,9 +141,6 @@
         // End of Logon/Logoff Feature
 
         // Beginning of Chat Box Feature
-
-        var checkMessagesFlag = false;
-        var checkMessagesTimer;
 
         function clearChat() {
             $("#chatPanel").html("");
@@ -233,9 +227,6 @@
             }
         }
 
-        var txtFocus = false;
-        var innerHeight = 0;
-
         jQuery(function () {
 
 
@@ -290,74 +281,79 @@
             });
         });
 
-        // End of Chat Box Feature
+        function SubmitFeedback(radioValue, textAreaValue) {
+            var webMethod = "PDMentorWebService.asmx/SubmitFeedback";
+            var parameters = "{\"experience\":\"" + encodeURI(radioValue) + "\",\"feedback\":\"" + encodeURI(textAreaValue) + "\"}";
 
-        // Beginning of Video Recording Feature
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d) {
+                        clearFeedback()
+                        showCard('howtotalk');
+                    }
+                    else {
+                        alert("submit failed");
+                    }
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }
 
-        //var os = require('os');
-        //var nodeStatic = require('node-static');
-        //var http = require('http');
-        //var socketIO = require('socket.io');
+        function firstlogin() {
+            if (x == 0) {
+                showCard('pickrole');
+            }
+            else {
+                showCard('home');
+            }
+        }
 
-        //var fileServer = new (nodeStatic.Server)();
-        //var app = http.createServer(function (req, res) {
-        //    fileServer.serve(req, res);
-        //}).listen(8080);
+        function mentor() {
+            x = 1;
+            y = 1;
+            if (y == 1) {
+                showCard('home');
+                $('#mentor').css('display', 'block');
+                $('#main').css('display', 'none');
+            }
+        }
 
-        //var io = socketIO.listen(app);
-        //io.sockets.on('connection', function (socket) {
+        function mentee() {
+            x = 1;
+            z = 1;
+            if (z == 1) {
+                showCard('home');
+                $('#main').css('display', 'none');
+                $('#mentee').css('display', 'block');
+            }
+        }
 
-        //    // convenience function to log server messages on the client
-        //    function log() {
-        //        var array = ['Message from server:'];
-        //        array.push.apply(array, arguments);
-        //        socket.emit('log', array);
-        //    }
-
-        //    socket.on('message', function (message) {
-        //        log('Client said: ', message);
-        //        // for a real app, would be room-only (not broadcast)
-        //        socket.broadcast.emit('message', message);
-        //    });
-
-        //    socket.on('create or join', function (room) {
-        //        log('Received request to create or join room ' + room);
-
-        //        var clientsInRoom = io.sockets.adapter.rooms[room];
-        //        var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
-
-        //        log('Room ' + room + ' now has ' + numClients + ' client(s)');
-
-        //        if (numClients === 0) {
-        //            socket.join(room);
-        //            log('Client ID ' + socket.id + ' created room ' + room);
-        //            socket.emit('created', room, socket.id);
-
-        //        } else if (numClients === 1) {
-        //            log('Client ID ' + socket.id + ' joined room ' + room);
-        //            io.sockets.in(room).emit('join', room);
-        //            socket.join(room);
-        //            socket.emit('joined', room, socket.id);
-        //            io.sockets.in(room).emit('ready');
-        //        } else { // max two clients
-        //            socket.emit('full', room);
-        //        }
-        //    });
-
-        //    socket.on('ipaddr', function () {
-        //        var ifaces = os.networkInterfaces();
-        //        for (var dev in ifaces) {
-        //            ifaces[dev].forEach(function (details) {
-        //                if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
-        //                    socket.emit('ipaddr', details.address);
-        //                }
-        //            });
-        //        }
-        //    });
-
-        //});
-
-        // End of Video Recording Feature
+        function home() {
+            if (y == 1) {
+                showCard('home');
+                $('#mentor').css('display', 'block');
+                $('#main').css('display', 'none');
+            }
+            else if (z == 1) {
+                showCard('home');
+                $('#mentee').css('display', 'block');
+                $('#main').css('display', 'none');
+            }
+            else if (y == 0 && z == 0) {
+                showCard('home');
+                $('#main').css('display', 'block');
+                $('#mentor').css('display', 'none');
+                $('#mentee').css('display', 'none');
+                
+            }
+        }
 
     </script>
 
@@ -377,48 +373,6 @@
         </div>
     </div>
 
-    <div id="feedback" class="apppage" style="display:none;">
-        <div class="temp-header container-fluid">
-            <div class="row apphr">
-                <div class="col-xs-4"></div>
-                <div class="col-xs-4 text-center appht">
-                    <div>GIVE</div>
-                    <div>Feedback</div>
-                </div>
-                <div class="col-xs-4 text-right">
-                    <i class="fas fa-search fa-4x"></i>
-                </div>
-            </div>
-        </div>
-        <div class="temp-body container-fluid">
-            <div class="text-center appbt">How was the video experience for you?</div>
-            <form>
-                <div class="text-center">
-                    <input type="radio" name="feedback" value="Good" /> Good
-                    <input type="radio" name="feedback" value="Neutral" /> Neutral
-                    <input type="radio" name="feedback" value="Bad" /> Bad
-                </div>
-                <textarea rows="10" cols="60" placeholder="Submit any feedback here"></textarea>
-            </form>
-            <div class="log-inputs">
-                <button class="submit" onclick="SubmitFeedback($('input:checked').val(), $('textarea').val())">Submit</button>
-                <button class="reset submit" onclick="clearFeedback()">Skip</button>
-            </div>
-        </div>
-        <div class="temp-footer container-fluid">
-            <div class="row text-center appfi">
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div id="home" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
@@ -433,16 +387,190 @@
                 </div>
             </div>
         </div>
-        <div class="temp-body container-fluid">
-
+        <div class="temp-body container-fluid text-center">
+            <div id="main">
+                <div class="appbt" id="welname"></div>
+                <img class="log-img" src="./Images/PD-Logo.png" alt="PD Mentor">
+                <h2 class="chts">Click Here To Start</h2>
+                <i class="fas fa-angle-double-down fa-4x"></i>
+            </div>
+            <div id="mentor">
+                <div class="container-fluid">
+                    <div class="row apphome">
+                        <a class="anch" href="#" onclick="showCard('howtotalk')">
+                            <div class="col-xs-8">
+                                <div class="">Contact Mentee</div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class=""><i class="fas fa-chalkboard-teacher"></i></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="mentee">
+                <div class="container-fluid">
+                    <div class="row apphome">
+                        <a class="anch" href="#" onclick="showCard('howtotalk')">
+                            <div class="col-xs-8">
+                                <div class="">Contact Mentor</div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class=""><i class="fas fa-chalkboard-teacher"></i></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pickrole" class="apppage" style="display:none;">
+        <div class="temp-header container-fluid">
+            <div class="row apphr">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 text-center appht">
+                    <div>PD</div>
+                    <div>Mentor</div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <i class="fas fa-search fa-4x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="temp-body container-fluid text-center">
+            <div class="text-center appbt">Pick Your Role</div>
+            <div class="container-fluid">
+                <div class="row text-center appss midicon">
+                    <div class="col-xs-6">
+                        <a href="#" onclick="mentor()"><i class="fas fa-chalkboard-teacher fa-4x"></i></a>
+                        <div>Mentor</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <a href="#" onclick="mentee()"><i class="fas fa-people-carry fa-4x"></i></a>
+                        <div>Mentee</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="temp-footer container-fluid">
+            <div class="row text-center appfi">
+                <div class="col-xs-4">
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings" class="apppage" style="display:none;">
+        <div class="temp-header container-fluid">
+            <div class="row apphr">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 text-center appht">
+                    <div>PD</div>
+                    <div>Mentor</div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <i class="fas fa-search fa-4x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="temp-body container-fluid">
+            <div class="container-fluid">
+                <div class="row text-center appss">
+                    <div class="col-xs-12 midicon">
+                        <a href="#" onclick="LogOff()"><i class="fas fa-cog fa-4x"></i></a>
+                        <div>LOG OFF</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="temp-footer container-fluid">
+            <div class="row text-center appfi">
+                <div class="col-xs-4">
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="selectdepart" class="apppage" style="display:none;">
+        <div class="temp-header container-fluid">
+            <div class="row apphr">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 text-center appht">
+                    <div>SELECT</div>
+                    <div>Skill</div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <i class="fas fa-search fa-4x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="temp-body container-fluid">
+            <div class="text-center appbt">Select Your Department</div>
+            <div class="container-fluid bscroll">
+                <div class="row text-center appss">
+                    <div class="col-xs-6">
+                        <i class="fas fa-digital-tachograph fa-4x"></i>
+                        <div>Information Technology</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <i class="fas fa-fingerprint fa-4x"></i>
+                        <div>Human Resources</div>
+                    </div>
+                </div>
+                <div class="row text-center appss">
+                    <div class="col-xs-6">
+                        <i class="fab fa-safari fa-4x"></i>
+                        <div>Insurance</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <i class="fas fa-piggy-bank fa-4x"></i>
+                        <div>Banking</div>
+                    </div>
+                </div>
+                <div class="row text-center appss">
+                    <div class="col-xs-12">
+                        <i class="far fa-chart-bar fa-4x"></i>
+                        <div>Investing &amp; Financial Planning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="temp-footer container-fluid">
+            <div class="row text-center appfi">
+                <div class="col-xs-4">
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -532,10 +660,10 @@
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -543,6 +671,7 @@
             </div>
         </div>
     </div>
+
 
     <div id="howtotalk" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
@@ -581,103 +710,10 @@
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="selectskill" class="apppage" style="display:none;">
-        <div class="temp-header container-fluid">
-            <div class="row apphr">
-                <div class="col-xs-4"></div>
-                <div class="col-xs-4 text-center appht">
-                    <div>SELECT</div>
-                    <div>Skill</div>
-                </div>
-                <div class="col-xs-4 text-right">
-                    <i class="fas fa-search fa-4x"></i>
-                </div>
-            </div>
-        </div>
-        <div class="temp-body container-fluid">
-            <div class="text-center appbt">Select Your Skill From This List</div>
-            <div class="container-fluid bscroll">
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-                <div class="row text-center appss">
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <i class="fas fa-file-alt fa-4x"></i>
-                        <div>[INSERT TEXT HERE]</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="temp-footer container-fluid">
-            <div class="row text-center appfi">
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -692,7 +728,7 @@
                 <div class="col-xs-4"></div>
                 <div class="col-xs-4 text-center appht">
                     <div>CHAT</div>
-                    <div>Box</div>
+                    <div>Room</div>
                 </div>
                 <div class="col-xs-4 text-right">
                     <i class="fas fa-search fa-4x"></i>
@@ -710,10 +746,10 @@
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -742,19 +778,27 @@
             <div>
                 <video id="remoteVideo" autoplay playsinline></video>
             </div>
-            <div class="text-center">
-                <button id="startButton">Start</button>
-                <button id="callButton">Call</button>
-                <button id="hangupButton" onclick="showCard('feedback')">Hang Up</button>
+            <div class="container-fluid text-right">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <button class="vidsubmit" id="startButton">Start</button>
+                    </div>
+                    <div class="col-xs-4">
+                        <button class="vidsubmit" id="callButton">Call</button>
+                    </div>
+                    <div class="col-xs-4">
+                        <button class="vidsubmit" id="hangupButton" onclick="showCard('feedback')">End</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -763,13 +807,13 @@
         </div>
     </div>
 
-    <div id="settings" class="apppage" style="display:none;">
+    <div id="feedback" class="apppage" style="display:none;">
         <div class="temp-header container-fluid">
             <div class="row apphr">
                 <div class="col-xs-4"></div>
                 <div class="col-xs-4 text-center appht">
-                    <div>PD</div>
-                    <div>Mentor</div>
+                    <div>GIVE</div>
+                    <div>Feedback</div>
                 </div>
                 <div class="col-xs-4 text-right">
                     <i class="fas fa-search fa-4x"></i>
@@ -777,20 +821,27 @@
             </div>
         </div>
         <div class="temp-body container-fluid">
-            <div class="row text-center appss">
-                <div class="col-xs-12 setts">
-                    <a href="#" onclick="LogOff()"><i class="fas fa-cog fa-4x"></i></a>
-                    <div>LOG OFF</div>
+            <div class="text-center appbt">How was the video experience for you?</div>
+            <form>
+                <div class="text-center">
+                    <input type="radio" name="feedback" value="Good" /> Good
+                    <input type="radio" name="feedback" value="Neutral" /> Neutral
+                    <input type="radio" name="feedback" value="Bad" /> Bad
                 </div>
+                <textarea rows="10" cols="60" placeholder="Submit any feedback here"></textarea>
+            </form>
+            <div class="log-inputs">
+                <button class="submit" onclick="SubmitFeedback($('input:checked').val(), $('textarea').val())">Submit</button>
+                <button class="reset submit" onclick="clearFeedback()">Skip</button>
             </div>
         </div>
         <div class="temp-footer container-fluid">
             <div class="row text-center appfi">
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('home')"><i class="fas fa-home fa-4x"></i></a>
+                    <a href="#" onclick="home()"><i class="fas fa-home fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
-                    <a href="#" onclick="showCard('howtotalk')"><i class="fas fa-users fa-4x"></i></a>
+                    <a href="#" onclick="firstlogin()"><i class="fas fa-users fa-4x"></i></a>
                 </div>
                 <div class="col-xs-4">
                     <a href="#" onclick="showCard('settings')"><i class="fas fa-cog fa-4x"></i></a>
@@ -798,6 +849,8 @@
             </div>
         </div>
     </div>
+
+
 
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./js/main.js"></script>
